@@ -208,4 +208,12 @@ class FourRectCircleView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : FourRectCircleView {
+            val view : FourRectCircleView = FourRectCircleView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }

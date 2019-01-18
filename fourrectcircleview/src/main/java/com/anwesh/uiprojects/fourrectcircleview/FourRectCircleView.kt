@@ -18,10 +18,11 @@ val rects : Int = 4
 val scGap : Float = 0.05f
 val scDiv : Double = 0.51
 val sizeFactor : Float = 2.7f
-val rSizeFactor : Float = 3f
+val rSizeFactor : Float = 2.2f
 val rGapFactor : Float = 1.9f
 val foreColor : Int = Color.parseColor("#4CAF50")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val strokeFactor : Int = 90
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -39,15 +40,20 @@ fun Canvas.drawFRCNode(i : Int, scale : Float, paint : Paint) {
     val size : Float = gap / sizeFactor
     val rSize : Float = size / rSizeFactor
     val rGap : Float = size / rGapFactor
+    paint.style = Paint.Style.STROKE
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.color = foreColor
     save()
     translate(w/2, gap * (i + 1))
     rotate(90f * sc2)
+    drawCircle(0f, 0f, size, paint)
+    paint.style = Paint.Style.FILL
     for (j in 0..(rects - 1)) {
         val sc : Float = sc1.divideScale(j, rects)
         save()
         rotate(90f * j)
         translate(rGap, 0f)
-        drawRect(RectF(-rSize/2, -rSize/3, rSize/2, -rSize/3 + (2 * rSize * sc) / 3), paint)
+        drawRect(RectF(-rSize / 3, -2 * rSize / 3, rSize / 3, -2 * rSize / 3 + (4 * rSize * sc) / 3), paint)
         restore()
     }
     restore()

@@ -19,7 +19,7 @@ val scGap : Float = 0.05f
 val scDiv : Double = 0.51
 val sizeFactor : Float = 2.7f
 val rSizeFactor : Float = 3f
-val rGapFactor : Float = 3f
+val rGapFactor : Float = 1.9f
 val foreColor : Int = Color.parseColor("#4CAF50")
 val backColor : Int = Color.parseColor("#BDBDBD")
 
@@ -29,3 +29,26 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + scaleFactor() * b.inverse()
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawFRCNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    val size : Float = gap / sizeFactor
+    val rSize : Float = size / rSizeFactor
+    val rGap : Float = size / rGapFactor
+    save()
+    translate(w/2, gap * (i + 1))
+    rotate(90f * sc2)
+    for (j in 0..(rects - 1)) {
+        val sc : Float = sc1.divideScale(j, rects)
+        save()
+        rotate(90f * j)
+        translate(rGap, 0f)
+        drawRect(RectF(-rSize/2, -rSize/3, rSize/2, -rSize/3 + (2 * rSize * sc) / 3), paint)
+        restore()
+    }
+    restore()
+}

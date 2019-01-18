@@ -185,4 +185,26 @@ class FourRectCircleView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : FourRectCircleView) {
+
+        private val animator : Animator = Animator(view)
+        private var frc : FourRectCircle = FourRectCircle(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            frc.draw(canvas, paint)
+            animator.animate {
+                frc.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            frc.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
